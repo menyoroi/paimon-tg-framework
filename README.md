@@ -8,6 +8,8 @@ You can create a full-fledged structure for a bot in just a couple of lines.
 ```
 dir "%path%" - Selecting the directory where the bot folder will be stored.
 bot_create -@ %namebot% - Creating a bot in the current directory.
+bot_settings -@ %namebot% --%parametr%=%value% - Configuring bot parameters. Available parameters: --token
+bot_run -@ %namebot% - Launching the bot.
 bot_payments -@ %namebot% --qiwi | --yoomoney | --crystalPay - Adding a payment module to the bot structure.
 bot_states.add -@ %namebot% --group:%namegroup%(%namestate%, %namestate%, ...) - Creating a state group.
 help - Help with commands.
@@ -30,8 +32,10 @@ The next step is to create a subdirectory with the bot structure:
 paimon-tg-framework@A:/: bot_create -@ TEST #Specify the name of the subdirectory after -@.
 paimon-tg-framework@A:/:
 ```
-That's it! Our bot structure for telegram has been successfully created. In order for your bot to work, you need to specify the token in the subdirectory file config.py like this:
+Excellent. Our bot has been created. Now we will specify our token in the settings and launch the bot:
 ```
-bot_token = 'Your token'
+paimon-tg-framework@A:/: bot_settings -@ TEST --token=your_token
+paimon-tg-framework@A:/: bot_run -@ TEST
+The bot is running!
 ```
-You can launch the bot via a file main.py in the subdirectory. Pre-install all the necessary libraries specified in the file requirements.txt.
+Pre-install all the necessary libraries specified in the file requirements.txt.

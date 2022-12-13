@@ -22,11 +22,15 @@ async def execute(lex, arg):
         await commands.bot_create(arg)
     elif lex == 'bot_payments':
         await commands.bot_payments(arg)
+    elif lex == 'bot_run':
+        await commands.bot_run(arg)
+    elif lex == 'bot_settings':
+        await commands.bot_settings(arg)
     elif lex == 'bot_states.add':
-        await commands.bot_state_add(arg)
+        await commands.bot_states_add(arg)
     elif lex == 'help':
         commands.help()
     elif lex == 'exit':
         commands.c_exit()
     else:
-        print('Command not found!')
+        print('command not found!')
