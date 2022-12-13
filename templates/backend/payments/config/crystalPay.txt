@@ -1,0 +1,3 @@
+class Crystal_Pay:
+    login_casa = ''
+    secret1 = ''

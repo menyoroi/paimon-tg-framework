@@ -1,0 +1,26 @@
+from yoomoney import Client
+from yoomoney import Quickpay
+from config import Yoomoney
+
+class YmPay():
+    def __init__(self, token=Yoomoney.token):
+        self.client = Client(token=token)
+        self.accountInfo = self.client.account_info()
+        self.number = self.accountInfo.account
+
+    async def create_link(self, amount, comment):
+        ymForm = Quickpay(
+            receiver=self.number,
+            quickpay_form="shop",
+            targets='pay',
+            paymentType="SB",
+            sum=int(amount),
+            label=str(comment))
+        return ymForm.redirected_url
+
+    async def check_bill(self, comment):
+        historyOperations = self.client.operation_history().operations
+        for operation in historyOperations:
+            if operation.label == comment:
+                return True
+        return False

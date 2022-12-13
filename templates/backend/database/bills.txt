@@ -1,0 +1,17 @@
+from loader import db
+from datetime import datetime
+
+
+async def create(amount:int, user_id:int, bill_id:int, msg_id:int):
+    try:
+        db.table('bills').insert(amount=amount, user_id=user_id, bill_id=bill_id, status='expected', created=str(datetime.now()), msg_id=msg_id)
+        return True
+    except:
+        return False
+
+async def delete(bill_id:int):
+    try:
+        db.table('bills').where('bill_id', bill_id).delete()
+        return True
+    except:
+        return False

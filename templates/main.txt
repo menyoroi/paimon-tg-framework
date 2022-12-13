@@ -1,0 +1,9 @@
+from handlers import dp
+import asyncio
+
+async def main():
+    DPbot = loop.create_task(dp.start_polling())
+    await asyncio.wait([DPbot])
+
+loop = asyncio.new_event_loop()
+loop.run_until_complete(main())

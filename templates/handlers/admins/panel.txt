@@ -1,0 +1,11 @@
+from loader import dp, FSMContext, db
+from aiogram import types
+from keyboard import kbi_admin_panel
+
+@dp.message.handler(commands='admin')
+async def command_admin(message:types.Message, state:FSMContext):
+    await message.answer(text='Admin panel:', reply_markup=kbi_admin_panel)
+
+@dp.callback_query_handler(text='admin_panel_manageUsers')
+async def button_admin_panel_manageUsers(call:types.CallbackQuery, state:FSMContext):
+    pass

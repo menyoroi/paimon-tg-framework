@@ -1,0 +1,16 @@
+from orator import DatabaseManager
+from aiogram import Dispatcher, Bot
+from aiogram.dispatcher import FSMContext
+from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from config import bot_token
+
+
+bot = Bot(token=bot_token)
+dp = Dispatcher(bot=bot, storage=MemoryStorage())
+db = DatabaseManager({
+    'sql':{
+        'driver': 'sqlite',
+        'database': 'db.sqlite',
+
+    }
+})

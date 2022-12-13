@@ -1,0 +1,9 @@
+from aiogram import types
+
+
+kbi_admin_panel = types.InlineKeyboardMarkup(inline_keyboard=[
+    [
+        types.InlineKeyboardButton(text='Users', callback_data='admin_panel_manageUsers'),
+        types.InlineKeyboardButton(text='Admins', callback_data='admin_panel_manageAdmins')
+    ]
+])

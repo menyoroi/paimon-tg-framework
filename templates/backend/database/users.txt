@@ -1,0 +1,27 @@
+from loader import db
+
+class users:
+    def __init__(self, user_id):
+        self.user_id = user_id
+        self.userInfo = db.table('users').where('user_id', user_id).first()
+
+    async def create(self, username):
+        try:
+            db.table('users').insert(user_id=self.user_id, username=username)
+            return True
+        except:
+            return False
+
+    async def upBalance(self, sum:float):
+        try:
+            db.table('users').where('user_id', self.user_id).update(balance=float(self.userInfo['balance'])+sum)
+            return True
+        except:
+            return False
+
+    async def minusBalance(self, sum:float):
+        try:
+            db.table('users').where('user_id', self.user_id).update(balance=float(self.userInfo['balance']) - float(sum))
+            return True
+        except:
+            return False

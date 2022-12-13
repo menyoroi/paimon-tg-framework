@@ -1,0 +1,6 @@
+from loader import dp, FSMContext
+from aiogram import types
+
+@dp.message_handler(commands='start')
+async def command_start(message:types.Message, state=FSMContext):
+    await message.answer('*Menu:*', parse_mode='markdown')

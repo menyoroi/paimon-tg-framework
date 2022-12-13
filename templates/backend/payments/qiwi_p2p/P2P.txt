@@ -1,0 +1,101 @@
+import requests
+import random
+from datetime import timedelta, datetime, timezone, tzinfo
+from config import Qiwi_p2p
+
+
+class QiwiP2P:
+    def __init__(self, publicKey=Qiwi_p2p.publicKey, secretKey=Qiwi_p2p.secretKey):
+        self.publicKey = publicKey
+        self.secretKey = secretKey
+
+    def create_bill(self, sum, comment=None, billId=None, lifetime_minutes=30, lifetime_hours=0):
+        """
+        :param lifetime_minutes: in minutes
+        :param lifetime_hours: in hours
+        :type lifetime_minutes: int
+        :type lifetime_hours: int
+        :type sum: float
+        :type comment: str
+        :return:
+        """
+        if billId == None:
+            billId = random.randint(1000000000000000000, 9000000000000000000)
+        date_expiration = datetime.now() + timedelta(minutes=int(lifetime_minutes), hours=int(lifetime_hours))
+        date_expiration_f = datetime(date_expiration.year, date_expiration.month, date_expiration.day, date_expiration.hour, date_expiration.minute ,tzinfo=timezone(offset=timedelta(hours=3))).isoformat()
+        headers = {
+            'Authorization': f'Bearer {self.secretKey}',
+            'Content-Type': 'application/json',
+            'accept': 'application/json'
+        }
+        par = {
+            'amount':{
+                'currency': 'RUB',
+                'value': float(sum)},
+            'comment': comment,
+            'expirationDateTime': date_expiration_f
+        }
+        try:
+            response = requests.put(url=f'https://api.qiwi.com/partner/bill/v1/bills/{billId}', headers=headers, json=par).json()
+            return {
+                'billId': response['billId'],
+                'amount': response['amount']['value'],
+                'expiriedDate': response['expirationDateTime'],
+                'payUrl': response['payUrl'],
+                'accPhone': response['recipientPhoneNumber']
+            }
+        except Exception as e:
+            if 'Expecting value:' in str(e):
+                return False
+
+    def check_bill(self, billid):
+        """
+        Response { billId, status, payUrl, expiriedDate }
+        :type billid: int
+        :return:
+        """
+
+        headers = {
+            'Authorization': f'Bearer {self.secretKey}',
+            'Content-Type': 'application/json',
+            'accept': 'application/json'
+        }
+        try:
+            response = requests.get(url=f'https://api.qiwi.com/partner/bill/v1/bills/{billid}', headers=headers).json()
+            customer_phone = None
+            try:
+                customer_phone = response['customer']['phone']
+            except:
+                pass
+            return {
+                'billId': response['billId'],
+                'status': response['status']['value'],
+                'amount': response['amount']['value'],
+                'payUrl': response['payUrl'],
+                'expiriedDate': response['expirationDateTime'],
+                'customerPhone': customer_phone
+            }
+
+
+        except Exception as e:
+            if 'Expecting value:' in str(e):
+                return False
+
+
+    def reject_bill(self, billid):
+        """
+        :type billid: int
+        :return:
+        """
+
+        headers = {
+            'Authorization': f'Bearer {self.secretKey}',
+            'Content-Type': 'application/json',
+            'accept': 'application/json'
+        }
+        try:
+            response = requests.post(url=f'https://api.qiwi.com/partner/bill/v1/bills/{billid}/reject', headers=headers).json()
+            return True
+        except Exception as e:
+            if 'Expecting value:' in str(e):
+                return False

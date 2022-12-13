@@ -1,0 +1,29 @@
+import requests
+
+
+def create_keys(token, name_key):
+    """
+    :type token: str
+    :type name_key: str
+    :return:
+    """
+    headers = {
+        'Authorization': f'Bearer {token}'
+    }
+    par = {
+        'keysPairName': str(name_key)
+    }
+    try:
+        response = requests.post(url='https://edge.qiwi.com/widgets-api/api/p2p/protected/keys/create', data=par,
+                                 headers=headers).json()['result']
+        name_key = response['name']
+        publicKey = response['publicKey']
+        secretKey = response['secretKey']
+        return {
+            'name_key': name_key,
+            'publicKey': publicKey,
+            'secretKey': secretKey
+        }
+    except Exception as e:
+        if 'Expecting value:' in str(e):
+            return False

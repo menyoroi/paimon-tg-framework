@@ -1,0 +1,46 @@
+import requests
+from config import Crystal_Pay
+
+class invoice:
+    def __init__(self, secret_key=Crystal_Pay.secret1, name_casa=Crystal_Pay.login_casa):
+        self.secret_key = secret_key
+        self.name_casa = name_casa
+
+    async def create(self, amount:int, lifetime:int=30, redirect_url='',):
+        """
+
+        :param amount: Сумма платежа
+        :param lifetime: Время действия платежа в минутах
+        :param redirect_url: Ссылка для перевода после оплаты
+        :return:
+        """
+
+        response = requests.get('https://api.crystalpay.ru/v1/', params={'o':'invoice-create',
+                                                                       's':self.secret_key,
+                                                                       'n':self.name_casa,
+                                                                       'amount':amount,
+                                                                       'lifetime':lifetime,
+                                                                       'redirect':redirect_url}).json()
+        return response
+
+    async def check(self, invoice_id):
+        response = requests.get('https://api.crystalpay.ru/v1/', params={'o':'invoice-check',
+                                                                       's':self.secret_key,
+                                                                       'n':self.name_casa,
+                                                                       'i':invoice_id}).json()
+        return response
+
+async def checkWork(secret_key:str, login_casa:str):
+    """
+
+    :param secret1:
+    :param login_casa:
+    :return:
+    """
+
+    response = requests.get('https://api.crystalpay.ru/v1/', params={'o':'balance',
+                                                                   's':secret_key,
+                                                                   'n':login_casa}).json()
+    if response['auth'] == 'ok':
+        return True
+    return False

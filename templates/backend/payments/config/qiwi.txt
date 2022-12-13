@@ -1,0 +1,3 @@
+class Qiwi_p2p:
+    secretKey = ''
+    publicKey = ''

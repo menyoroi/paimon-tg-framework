@@ -1,0 +1,7 @@
+from loader import dp
+from aiogram import types
+from aiogram.utils.exceptions import BotBlocked
+
+@dp.errors_handler(exception=BotBlocked)
+async def exception_BotBlocked(update: types.Update, exception: BotBlocked) -> bool:
+    return True
